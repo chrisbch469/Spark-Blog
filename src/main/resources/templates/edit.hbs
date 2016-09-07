@@ -1,0 +1,24 @@
+{{#partial "title"}}New Post{{/partial}}
+{{#partial "page"}}new.html{{/partial}}
+
+{{#partial "content"}}
+    <section>
+        <div class="container">
+            <div class="edit-entry">
+                <h2>Edit Entry</h2>
+                <form action="/entries/edit/{{entry.id}}/{{entry.TitleSlug}}.html" method="post">
+                    <label for="title"> Title</label>
+                    <input type="text" name="title" value="{{entry.title}}"><br>
+                    <label for="entry">Entry</label>
+                    <textarea rows="5" name="content">{{entry.content}}</textarea>
+                    <input type="submit" value="Save Entry" class="button">
+                    <a href="/entries/details/{{entry.id}}/{{entry.TitleSlug}}.html"
+                       class="button button-secondary">Cancel</a>
+                    <a href="/entries/delete/{{entry.id}}/{{entry.TitleSlug}}.html"
+                       class="button button-secondary">Delete</a>
+                </form>
+            </div>
+        </div>
+    </section>
+{{/partial}}
+{{>base.hbs}}

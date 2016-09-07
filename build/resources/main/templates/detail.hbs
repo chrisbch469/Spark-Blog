@@ -1,0 +1,45 @@
+{{#partial "title"}}Blog Post Details{{/partial}}
+
+
+{{#partial "content"}}
+    <section>
+        <div class="container">
+            <div class="entry-list single">
+                <article>
+                    <h1>{{entry.title}}</h1>
+                    <time datetime="{{entry.postDate}}">{{entry.postDateAsString}}</time>
+                    <div class="entry">
+                        <p>
+                            {{entry.content}}
+                        </p>
+                        <p><a href="/entries/edit/{{entry.id}}/{{entry.TitleSlug}}.html">
+                            <input type="submit" value="Edit Post" class="button">
+                        </a></p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    <section class="entry-comments">
+        <div class="container">
+            <h2>Comments</h2>
+            {{#each comments}}
+                <div class="comment">
+                    <strong>{{author}}</strong>
+                    <time datetime="{{postDate}}">{{postDateAsString}}</time>
+                    <p>{{ content}} </p>
+                </div>
+            {{/each}}
+            <div class="new-comment">
+                <form method="post" name="/entries/details/{{entry.id}}/{{entry.TitleSlug}}.html">
+                    <label for="name"> Name</label>
+                    <input type="text" name="author"><br>
+                    <label for="comment">Comment</label>
+                    <textarea rows="5" name="content"></textarea>
+                    <input type="submit" value="Post Comment" class="button">
+                </form>
+            </div>
+        </div>
+    </section>
+{{/partial}}
+{{>base.hbs}}

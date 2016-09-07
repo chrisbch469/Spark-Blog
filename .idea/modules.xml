@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Spark-Blog.iml" filepath="$PROJECT_DIR$/.idea/modules/Spark-Blog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Spark-Blog_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Spark-Blog_main.iml" group="Spark-Blog" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Spark-Blog_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Spark-Blog_test.iml" group="Spark-Blog" />
+    </modules>
+  </component>
+</project>
