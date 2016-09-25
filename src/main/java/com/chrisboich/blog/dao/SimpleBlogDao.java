@@ -9,16 +9,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+;
+
 public class SimpleBlogDao implements BlogDao {
 
     private Sql2o sql2o;
     private List<BlogEntry> blogEntries;
+    private ArrayList entries;
+    private Connection conn;
 
 
     public SimpleBlogDao(Sql2o sql2o) {
         this.sql2o = sql2o;
     }
-
 
     public SimpleBlogDao() {
         blogEntries = new ArrayList<>();
@@ -48,6 +51,7 @@ public class SimpleBlogDao implements BlogDao {
         }
     }
 
+
     @Override
     public BlogEntry findBlogEntryById(int id) {
         try (Connection conn = sql2o.open()) {
@@ -56,6 +60,7 @@ public class SimpleBlogDao implements BlogDao {
                     .executeAndFetchFirst(BlogEntry.class);
         }
     }
+
 
     @Override
     public void removeBlogEntryById(int id) {
@@ -80,4 +85,8 @@ public class SimpleBlogDao implements BlogDao {
 
         }
     }
+
+
+
+
 }

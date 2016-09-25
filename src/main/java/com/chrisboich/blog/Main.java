@@ -7,6 +7,7 @@ import spark.Filter;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,18 +15,23 @@ import static spark.Spark.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void fillBlog(BlogDao blogDao, CommentDao comDao) {
+        BlogEntry entry1 = new BlogEntry("Test 1", "Testing Content1", new Date());
+        BlogEntry entry2 = new BlogEntry("Test 2", "Testing Content 2", new Date());
+        BlogEntry entry3 = new BlogEntry("Test 3", "Testing Content 3", new Date());
+        blogDao.addEntry(entry1);
+        blogDao.addEntry(entry2);
+        blogDao.addEntry(entry3);
+        comDao.addComment(1, "Author 1", "commenting on post 1");
+        comDao.addComment(2, "Anonymous", "anonymous commmenter on post 3");
+        comDao.addComment(3, "Author 3", "comment on post 3");
+    }
 
-        //TODO: cb fix db information
-        //database information
-        String dbHost = "localhost";
-        String dbPort = "5432";
-        String dbUsername = "postgres"; //unable to access CRUD options with new users with all permissions
-        String dbPassword = "ctboich4";
-        String dbName = "simplesparkblog";
+    public static void main(String[] args) throws  Exception {
 
-        //new sql2o object with database information
-        Sql2o sql2o = new Sql2o("jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName, dbUsername, dbPassword);
+        String dbSource = "jdbc:h2:./db/simplesparkblog.db";
+        String dbConnection = String.format("%s;INIT=RUNSCRIPT from 'classpath:db/create.sql'", dbSource);
+        Sql2o sql2o = new Sql2o(dbConnection, "", "");
 
         //password for CRUD options
         String blogPassword = "blogowner";
@@ -33,9 +39,10 @@ public class Main {
         //static file location for css
         staticFileLocation("/public");
 
-        //dao object
-        BlogDao dao = new SimpleBlogDao(sql2o);
+        //dao objects
+        BlogDao blogDao = new SimpleBlogDao(sql2o);
         CommentDao comDao = new SimpleCommentDao(sql2o);
+
 
         //protected routes
         String protectedNew = "/new.html";
@@ -63,7 +70,10 @@ public class Main {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             try {
-                model.put("entries", dao.findAllBlogEntries());
+                if(blogDao.findAllBlogEntries().isEmpty()) {
+                    fillBlog(blogDao, comDao);
+                }
+                model.put("entries", blogDao.findAllBlogEntries());
             } catch (Exception exc) {
                 System.out.println("Error Finding Entries.");
             }
@@ -87,7 +97,7 @@ public class Main {
             String content = req.queryParams("content");
             BlogEntry blogEntry = new BlogEntry(title, content);
             try {
-                dao.addEntry(blogEntry);
+                blogDao.addEntry(blogEntry);
             } catch (Exception exc) {
                 System.out.println("Unable to Create New Entry, Try Again.");
             }
@@ -100,7 +110,7 @@ public class Main {
             int entryId;
             entryId = Integer.parseInt(req.params("id"));
             Map<String, Object> model = new HashMap<>();
-            BlogEntry blogEntry = dao.findBlogEntryById(entryId);
+            BlogEntry blogEntry = blogDao.findBlogEntryById(entryId);
             model.put("entry", blogEntry);
             model.put("comments", comDao.findCommentsById(entryId));
             return new ModelAndView(model, "detail.hbs");
@@ -110,7 +120,7 @@ public class Main {
         post("/entries/details/:id/:TitleSlug.html", (req, res) -> {
             int entryId;
             entryId = Integer.parseInt(req.params("id"));
-            BlogEntry blogEntry = dao.findBlogEntryById(entryId);
+            BlogEntry blogEntry = blogDao.findBlogEntryById(entryId);
             String titleSlug = blogEntry.getTitleSlug();
             String commentAuthor = req.queryParams("author");
             String commentContent = req.queryParams("content");
@@ -133,7 +143,7 @@ public class Main {
         get("/entries/edit/:id/:TitleSlug.html", (req, res) -> {
             int entryId;
             entryId = Integer.parseInt(req.params("id"));
-            BlogEntry blogEntry = dao.findBlogEntryById(entryId);
+            BlogEntry blogEntry = blogDao.findBlogEntryById(entryId);
             Map<String, Object> model = new HashMap<>();
             model.put("entry", blogEntry);
             return new ModelAndView(model, "edit.hbs");
@@ -147,7 +157,7 @@ public class Main {
             String newTitle = req.queryParams("title");
             BlogEntry newBlogEntry = new BlogEntry(newTitle, newContent);
             newBlogEntry.setId(entryId);
-            dao.updateEntry(newBlogEntry);
+            blogDao.updateEntry(newBlogEntry);
             res.redirect("/");
             return null;
         });
@@ -157,7 +167,7 @@ public class Main {
             int entryId;
             entryId = Integer.parseInt(req.params("id"));
             comDao.removeAllComments(entryId);
-            dao.removeBlogEntryById(entryId);
+            blogDao.removeBlogEntryById(entryId);
             res.redirect("/");
             return null;
         });

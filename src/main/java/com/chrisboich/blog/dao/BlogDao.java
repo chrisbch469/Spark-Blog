@@ -18,4 +18,5 @@ public interface BlogDao {
     void updateEntry(BlogEntry blogEntry);
 
 
+
 }

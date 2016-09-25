@@ -10,7 +10,8 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
+    //compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
+    compile 'com.h2database:h2:1.4.191'
     compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
     compile group: 'com.sparkjava', name: 'spark-core', version: '2.3'
     compile group: 'com.sparkjava', name: 'spark-template-handlebars' , version: '2.3'

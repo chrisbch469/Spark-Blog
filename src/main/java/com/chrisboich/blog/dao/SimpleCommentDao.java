@@ -13,12 +13,12 @@ import java.util.List;
 public class SimpleCommentDao implements CommentDao {
 
     private Sql2o cSql2o;
+    private Connection conn;
 
-    public SimpleCommentDao(Sql2o cSql2o) {
+   public SimpleCommentDao(Sql2o cSql2o) {
         this.cSql2o = cSql2o;
 
     }
-
 
     @Override
     public int addComment(int post_id, String author, String content) {

@@ -18,10 +18,7 @@ public class BlogEntry implements Comparator<BlogEntry> {
     private int post_id;
     private String mSlug;
 
-    /*blog entry constructor with 3 params
-    @param - title = title of blog entry
-    @param - entry = body of blog entry
-     */
+    /*blog entry constructor with 3 params*/
     public BlogEntry(String title, String content) {
         this(title, content, new Date());
     }
